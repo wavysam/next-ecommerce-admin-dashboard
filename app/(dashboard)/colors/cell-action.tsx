@@ -15,6 +15,7 @@ import {
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { ColorColumn } from "./columns";
 import ApiAlert from "@/components/api-alert";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Props {
   color: ColorColumn;
@@ -24,6 +25,7 @@ export default function CellAction({ color }: Props) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { toast } = useToast();
 
   const handleDelete = async () => {
     setOpen(true);
@@ -34,9 +36,17 @@ export default function CellAction({ color }: Props) {
       });
       if (res.ok) {
         router.refresh();
+        toast({
+          title: "Success!",
+          description: "Color removed",
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong!",
+          description: "Delete first the product using this color",
+        });
       }
-    } catch (error) {
-      console.log(error);
     } finally {
       setOpen(false);
       setLoading(false);

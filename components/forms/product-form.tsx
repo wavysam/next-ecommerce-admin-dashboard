@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import ImageUpload from "../image-upload";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Props {
   initialData?: (Product & { images: Image[] }) | null;
@@ -53,6 +54,7 @@ export default function ProductForm({
   colors,
 }: Props) {
   const router = useRouter();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof productSchema>>({
     resolver: zodResolver(productSchema),
@@ -78,8 +80,18 @@ export default function ProductForm({
         body: JSON.stringify(data),
       });
       if (res.ok) {
+        toast({
+          title: "Success!",
+          description: "Product updated",
+        });
         router.push("/products");
         router.refresh();
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong!",
+          description: "Failed to update product",
+        });
       }
     } else {
       await delay(1000);
@@ -90,9 +102,18 @@ export default function ProductForm({
       if (res.ok) {
         router.push("/products");
         router.refresh();
+        toast({
+          title: "Success!",
+          description: "Product created",
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong!",
+          description: "Failed to create product",
+        });
       }
     }
-    console.log(data);
   };
   return (
     <>

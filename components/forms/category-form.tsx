@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Props {
   initialData?: Category | null;
@@ -28,6 +29,7 @@ const categorySchema = z.object({
 
 export default function CategoryForm({ initialData }: Props) {
   const router = useRouter();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof categorySchema>>({
     resolver: zodResolver(categorySchema),
@@ -47,8 +49,18 @@ export default function CategoryForm({ initialData }: Props) {
         body: JSON.stringify(data),
       });
       if (res.ok) {
+        toast({
+          title: "Success!",
+          description: "Category updated",
+        });
         router.push("/categories");
         router.refresh();
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong!",
+          description: "Failed to update category",
+        });
       }
     } else {
       await delay(1000);
@@ -56,12 +68,24 @@ export default function CategoryForm({ initialData }: Props) {
         method: "POST",
         body: JSON.stringify(data),
       });
+
       if (res.ok) {
+        toast({
+          title: "Success!",
+          description: "Category created",
+        });
         router.push("/categories");
         router.refresh();
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong!",
+          description: "Failed to create category",
+        });
       }
     }
   };
+
   return (
     <>
       <Form {...form}>

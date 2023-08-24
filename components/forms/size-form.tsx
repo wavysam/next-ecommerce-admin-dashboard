@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Size } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Props {
   initialData?: Size | null;
@@ -29,6 +30,7 @@ const sizeSchema = z.object({
 
 export default function SizeForm({ initialData }: Props) {
   const router = useRouter();
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof sizeSchema>>({
     resolver: zodResolver(sizeSchema),
     defaultValues: {
@@ -49,8 +51,18 @@ export default function SizeForm({ initialData }: Props) {
       });
 
       if (res.ok) {
+        toast({
+          title: "Success!",
+          description: "Size updated",
+        });
         router.push("/sizes");
         router.refresh();
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong!",
+          description: "Failed to update size",
+        });
       }
     } else {
       await delay(1000);
@@ -62,6 +74,16 @@ export default function SizeForm({ initialData }: Props) {
       if (res.ok) {
         router.push("/sizes");
         router.refresh();
+        toast({
+          title: "Success!",
+          description: "Size created",
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong!",
+          description: "Failed to create size",
+        });
       }
     }
   };

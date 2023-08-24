@@ -1,8 +1,8 @@
-import MainNav from "@/components/main-nav";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import SideBar from "@/components/sidebar";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ weight: "400", subsets: ["latin"] });
 
@@ -19,15 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        {/* <div className="hidden flex-col md:flex">
-          <div className="border-b">
-            <div className="flex h-16 items-center px-4">
-              <MainNav />
-            </div>
-          </div>
-        </div> */}
         <SideBar />
         <main className="sm:pl-64 sm:mx-12 mx-4">{children}</main>
+        <Toaster />
       </body>
     </html>
   );

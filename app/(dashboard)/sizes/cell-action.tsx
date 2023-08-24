@@ -15,6 +15,7 @@ import {
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { SizeColumn } from "./columns";
 import ApiAlert from "@/components/api-alert";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Props {
   size: SizeColumn;
@@ -23,6 +24,7 @@ interface Props {
 export default function CellAction({ size }: Props) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
   const router = useRouter();
 
   const handleDelete = async () => {
@@ -34,9 +36,17 @@ export default function CellAction({ size }: Props) {
       });
       if (res.ok) {
         router.refresh();
+        toast({
+          title: "Success!",
+          description: "Size removed",
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong!",
+          description: "Delete first the product using this size",
+        });
       }
-    } catch (error) {
-      console.log(error);
     } finally {
       setOpen(false);
       setLoading(false);

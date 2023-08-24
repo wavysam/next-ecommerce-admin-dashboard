@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Size } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Props {
   initialData?: Size | null;
@@ -29,6 +30,7 @@ const colorSchema = z.object({
 
 export default function ColorForm({ initialData }: Props) {
   const router = useRouter();
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof colorSchema>>({
     resolver: zodResolver(colorSchema),
     defaultValues: {
@@ -49,8 +51,18 @@ export default function ColorForm({ initialData }: Props) {
       });
 
       if (res.ok) {
+        toast({
+          title: "Success!",
+          description: "Color updated",
+        });
         router.push("/colors");
         router.refresh();
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong!",
+          description: "Failed to update color",
+        });
       }
     } else {
       await delay(1000);
@@ -62,6 +74,16 @@ export default function ColorForm({ initialData }: Props) {
       if (res.ok) {
         router.push("/colors");
         router.refresh();
+        toast({
+          title: "Success!",
+          description: "Color created",
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong!",
+          description: "Failed to create color",
+        });
       }
     }
   };

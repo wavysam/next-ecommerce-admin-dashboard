@@ -66,3 +66,25 @@ export async function DELETE(request: NextRequest, { params }: Props) {
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
+
+export async function GET(request: NextRequest, { params }: Props) {
+  const { productId } = params;
+  try {
+    const product = await prisma.product.findUnique({
+      where: {
+        id: productId,
+      },
+      include: {
+        images: true,
+        category: true,
+        size: true,
+        color: true,
+      },
+    });
+
+    return NextResponse.json(product, { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return new NextResponse("Internal Server Error", { status: 500 });
+  }
+}

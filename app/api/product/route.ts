@@ -29,9 +29,22 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const categoryId = searchParams.get("categoryId") || undefined;
+  const sizeId = searchParams.get("sizeId") || undefined;
+  const colorId = searchParams.get("colorId") || undefined;
+  const isFeatured = searchParams.get("isFeatured");
+
   try {
     const product = await prisma.product.findMany({
+      where: {
+        categoryId,
+        sizeId,
+        colorId,
+        isFeatured: isFeatured ? true : false,
+      },
       include: {
+        images: true,
         category: true,
         size: true,
         color: true,
@@ -39,14 +52,6 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json(product, { status: 200 });
-    // return NextResponse.json({
-    //   name,
-    //   price,
-    //   categoryId,
-    //   colorId,
-    //   sizeId,
-    //   isFeatured,
-    // });
   } catch (error) {
     console.log(error);
     return new NextResponse("Internal Server Error", { status: 500 });
