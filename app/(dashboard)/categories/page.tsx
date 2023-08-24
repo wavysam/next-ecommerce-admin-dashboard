@@ -16,7 +16,7 @@ export default async function Page() {
     createdAt: dayjs(item.createdAt).format("MMMM DD, YYYY"),
   }));
   return (
-    <div className="pt-12">
+    <div className="py-12">
       <div className="flex justify-between items-center mb-4">
         <div>
           <h1 className="text-2xl font-bold">

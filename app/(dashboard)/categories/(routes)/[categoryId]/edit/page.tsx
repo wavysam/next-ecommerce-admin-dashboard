@@ -14,7 +14,7 @@ export default async function Page({
   });
 
   return (
-    <div className="pt-12">
+    <div className="py-12">
       <div className="mb-4">
         <h1 className="text-3xl font-bold">Update category</h1>
         <p className="opacity-80">Add a new category</p>

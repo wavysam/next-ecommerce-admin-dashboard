@@ -17,7 +17,7 @@ export default async function Page() {
   }));
 
   return (
-    <div className="pt-12">
+    <div className="py-12">
       <div className="flex justify-between items-center mb-4">
         <div>
           <h1 className="text-2xl font-bold">Sizes ({sizes.length})</h1>
